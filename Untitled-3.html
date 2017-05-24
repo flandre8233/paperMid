@@ -1,0 +1,61 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title> NON </title>
+<div style="border:none;margin:0px;padding:0px;position:relative">
+   <canvas id="_2DCanvas" width="1024" height="768" style="border:1px dashed #c3c3c3;">
+        流覽器如果不支援canvas元素，就顯示這行文字
+   </canvas>
+</div>
+</head>
+<body>
+<p id="testText"></p>
+<p id="testText2"></p>
+<p id="simpletest"></p>
+<button type="button" id="button01">button</button>
+<button type="button" id="button02">button</button>
+<button type="button" id="button03">button</button>
+<pre>
+//看來只有canvas可以在js使用到onmouseover mouseup  確定不能用...
+//array img ok
+//成功置入興使用 mouse location API
+//接下來要select到img 完成
+//select 進度 50 %  未分到layer 
+//拖拉 80%  11/13 完成
+//畫圖  差畫圖
+//動畫 gif
+//save system
+// https://thiscouldbebetter.wordpress.com/2012/12/18/loading-editing-and-saving-a-text-file-in-html5-using-javascrip/
+</pre>
+<script language="javascript">
+var canvas = document.getElementById("_2DCanvas");
+var ctx = canvas.getContext('2d');
+var coord;
+var MouseOriginX ;
+var MouseOriginY ;
+var selectItem ;
+var selectItemOriginX;
+var selectItemOriginY;
+canvas.addEventListener("mousedown",mousedownFunction,false);
+var imgList = [];
+imgList[0] = {img:bgimg = new Image() , X:0,Y:0 ,
+//width:0,height:0,
+width:canvas.width,height:canvas.height ,
+imgSrc:"http://www.html5canvastutorials.com/demos/assets/darth-vader.jpg"}; //bg
+imgList[1] = {img:img01 = new Image() , X:0,Y:0 , width:52,height:35 , imgSrc:"pic/img.jpg"}; //hair
+imgList[2] = {img:img02 = new Image() , X:0,Y:200 , width:200,height:200 , imgSrc:"pic/img2.jpg"}; //
+imgList[3] = {img:img03 = new Image() , X:0,Y:400 , width:540,height:280 , imgSrc:"pic/img3.gif"}; //
+imgList[4] = {img:img04 = new Image() , X:0,Y:500 , width:72,height:100 , imgSrc:"pic/img4.jpg"}; //
+imgList[5] = {img:img05 = new Image() , X:0,Y:700 , width:69,height:114 , imgSrc:"pic/img5.png"};
+function mousedownFunction(e){
+	//coord = getMousePointerCoord(e);
+			var saveimg ;
+			saveimg = imgList[1];
+			imgList[1] = imgList[3];
+			imgList[3] = saveimg;
+			canvas.style.cursor = 'move';
+	document.getElementById("simpletest").innerHTML =  imgList.length;
+};
+
+</script>
+</body>
+</html>

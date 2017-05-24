@@ -1,0 +1,302 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>NON</title>
+<div style="border:none;margin:0px;padding:0px;position:relative">
+  <canvas id="_2DCanvas" width="1800" height="768" style="border:1px dashed #c3c3c3;">
+  流覽器如果不支援canvas元素，就顯示這行文字
+  </canvas>
+</div>
+</head>
+<body>
+<table>
+	<tr>
+    	<td>
+        	<button type="button" id="button01" >save</button>
+        </td>
+        <td>
+        	<button type="button" id="button04" >reset!</button>
+        </td>
+    </tr>
+	<tr>
+		<td>
+        	<input type="file" id="fileToLoad">
+		</td>
+        
+        <td>
+        	<button type="button" id="button02" >load</button>
+		</td>
+	</tr>
+    <tr>
+    	<td>
+        	<button type="button" id="button03" >change!</button>
+        <td>
+    </tr>
+</table>
+
+<pre>
+//看來只有canvas可以在js使用到onmouseover mouseup  確定不能用...
+//array img ok
+//成功置入興使用 mouse location API
+//接下來要select到img 完成
+//select 進度 50 %  未分到layer 
+//拖拉 80%  11/13 完成
+//畫圖  差畫圖
+//動畫 gif
+//save system
+// https://thiscouldbebetter.wordpress.com/2012/12/18/loading-editing-and-saving-a-text-file-in-html5-using-javascrip/
+</pre>
+<script language="javascript">
+var canvas = document.getElementById("_2DCanvas");
+var ctx = canvas.getContext('2d');
+var coord;
+var MouseOriginX ;
+var MouseOriginY ;
+var selectItem ;
+var selectItemOriginX;
+var selectItemOriginY;
+var isinblue = false;
+document.getElementById("button01").addEventListener("click",saveTextAsFile,false);
+document.getElementById("button02").addEventListener("click",loadFileAsText,false);
+document.getElementById("button03").addEventListener("click",button03function,false);
+document.getElementById("button04").addEventListener("click",setArray,false);
+canvas.addEventListener("mouseup",mouseupFunction,false);
+canvas.addEventListener("mousedown",mousedownFunction,false);
+canvas.addEventListener("mousemove",mousemoveFunction,false);
+var imgList = [];
+imgList[0] = {img:new Image() , X:0,Y:0 ,width:1024,height:canvas.height ,src:"pic/naked.png"}; //bg
+imgList[1] = {img:new Image() , X:976,Y:396 , width:426,height:401 , src:"pic/clothes.png"}; //
+imgList[2] = {img:new Image() , X:681,Y:373 , width:340,height:405 , src:"pic/school.png"}; //
+imgList[3] = {img:new Image() , X:1050,Y:51 , width:559,height:510 , src:"pic/hair.png"}; //
+imgList[4] = {img:new Image() , X:698,Y:3 , width:402,height:225 , src:"pic/cap.png"}; 
+imgList[5] = {img:new Image() , X:871,Y:254 , width:137,height:89 , src:"pic/mouth.png"}; //
+imgList[6] = {img:new Image() , X:1540,Y:10 , width:203,height:176 , src:"pic/eyes.png"}; //
+window.onload=function() {
+	for (var i =  0 ; i < imgList.length ; i++){
+		imgList[i].img.onload = function(){
+			
+			reDrawCanvasImage();
+		};
+		imgList[i].img.src = imgList[i].src ;
+		//imgList[i].img.src = "pic/bgimg.jpg" ;
+	};
+};
+
+
+
+function button03function(){
+	if(isinblue != true){
+		imgList[1].img.src = "pic/clothes_2.png" ;
+		imgList[4].img.src = "pic/cap_2.png" ;
+		imgList[5].img.src = "pic/mouth_2.png" ;
+		imgList[6].img.src = "pic/eyes_2.png" ;
+		isinblue = true ;
+	}
+	else{
+		imgList[1].img.src = "pic/clothes.png" ;
+		imgList[4].img.src = "pic/cap.png" ;
+		imgList[5].img.src = "pic/mouth.png" ;
+		imgList[6].img.src = "pic/eyes.png" ;
+
+		isinblue = false ;
+	}
+	reDrawCanvasImage();
+};
+function setArray(){
+	imgList[0].X = 0;
+	imgList[0].Y = 0;
+	imgList[1].X = 976;
+	imgList[1].Y = 396;
+	imgList[2].X = 681;
+	imgList[2].Y = 373;
+	imgList[3].X = 1050;
+	imgList[3].Y = 51;
+	imgList[4].X = 698;
+	imgList[4].Y = 3;
+	imgList[5].X = 871;
+	imgList[5].Y = 254;
+	imgList[6].X = 1540;
+	imgList[6].Y = 10;
+	reDrawCanvasImage()
+};
+
+function mouseupFunction(e){
+	selectItem = null ;
+	canvas.style.cursor = 'auto';
+}
+function mousedownFunction(e){
+	coord = getMousePointerCoord(e);
+	MouseOriginX = coord.x;
+	MouseOriginY = coord.y;
+	for (var i = 1 ; i<=imgList.length-1 ; i++){
+	//for (var i = imgList.length-1 ; i >= 1 ; i--){
+		if ( MouseOriginX >= imgList[i].X && MouseOriginY >= imgList[i].Y && 
+		 	 MouseOriginX <= imgList[i].X+imgList[i].width && MouseOriginY <= imgList[i].Y+imgList[i].height ){
+			//檢測所在範圍公式
+			
+			
+			selectItem = i ;
+			selectItemOriginX = imgList[selectItem].X ;
+			selectItemOriginY = imgList[selectItem].Y ;
+
+			canvas.style.cursor = 'move';
+		}	
+	}
+	
+};
+function mousemoveFunction(e){
+	coord = getMousePointerCoord(e);
+	if( selectItem != null){
+		imgList[selectItem].X = selectItemOriginX - MouseOriginX + coord.x  ; // 更新被選擇中的圖片
+		imgList[selectItem].Y = selectItemOriginY - MouseOriginY + coord.y  ; //
+		reDrawCanvasImage();
+	}
+}
+function reDrawCanvasImage(){
+	if (canvas && canvas.getContext){ 
+	
+		ctx.clearRect(0, 0, canvas.width, ctx.canvas.height); //清理畫布
+		for (var i = 0 ; i < imgList.length ; i++){
+			ctx.drawImage(imgList[i].img, imgList[i].X , imgList[i].Y  ,imgList[i].width,imgList[i].height);
+		};
+	}
+};
+
+// area for api ..................................................
+// 用來計算座標位置並傳回
+var getMousePointerCoord = function(e)
+{
+   var evt = e||window.event; // 獲取相容性event物件
+   // 確定當前流覽器是否支持layerX
+   var supportLayer = typeof evt.layerX == 'number';
+   // 獲取事件物件元素
+   var target = evt.target ? evt.target : evt.srcElement;
+   // 計算x座標，首先確定使用layerX還是x，然後減去當前元素的邊距、邊框、襯距
+   var x = (supportLayer ? evt.layerX : evt.x) -
+             parseInt(getStyle(target,"borderLeftWidth")) -
+             parseInt(getStyle(target,"marginLeft")) -
+             parseInt(getStyle(target,"paddingLeft"));
+   // 計算y座標，首先確定使用layerY還是y，然後減去當前元素的邊框、襯距
+   // 注意不要減去邊距，父BOX的高度不會包含其中元素的邊距設定
+   var y = (supportLayer ? evt.layerY : evt.y) -
+             parseInt(getStyle(target,"borderTopWidth")) -
+             parseInt(getStyle(target,"paddingTop"));
+   // x、y座標有可能超出BOX，而且還有可能是負值，因此要做一下檢查
+   // 檢查x、y座標是否位於BOX內容區域內，然後根據這個進行修正
+   var isInBox = x>0&&y>0&&
+                    x<parseInt(getStyle(target,"width"))&&
+                    y<parseInt(getStyle(target,"height"));
+   // 只有位於BOX內容區域內才會得到值，否則得到的null
+   x = isInBox?x:x;
+   y = isInBox?y:y;
+   // 傳回一個Object，包含座標屬性
+   return {x: x, y: y};
+};
+
+/**
+ * 該函數用於獲取一個樣式屬性的計算值
+ * @param Element  elem             樣式所在的元素
+ * @param String   style            樣式DOM屬性名，例如paddingLeft
+ * @return String
+ */
+var getStyle = function(elem, style)
+{
+   if (window.getComputedStyle) { 
+      if (style=="cssFloat"||style=="styleFloat"||
+           style=="float") {
+         return window.getComputedStyle(elem, null).cssFloat;
+      }
+      else {
+         return window.getComputedStyle(elem, null)[style];
+      }
+   }
+   else{ // 舊版IE流覽器
+      if (style=="width"&&
+           elem.currentStyle["width"]=="auto"){
+         return elem.offsetWidth;
+      }
+      else if (style=="height"&&
+                 elem.currentStyle["height"]=="auto"){
+         return elem.offsetHeight;
+      }
+      else if (style=="cssFloat"||style=="styleFloat"||
+                 style=="float"){
+         return elem.currentStyle["styleFloat"];
+      }
+      else {
+         return elem.currentStyle[style];
+      }
+   }
+};
+
+function saveTextAsFile()
+{	
+	var textToWrite = "";
+	var space = "-";
+	
+	for(var i = 0 ; i < imgList.length ; i++)
+	{
+		textToWrite = textToWrite + imgList[i].X + space + imgList[i].Y + space ;
+	}
+	var fileNameToSaveAs = "file save";  //filename
+	
+	var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
+	
+	var downloadLink = document.createElement("a");
+	
+	downloadLink.download = fileNameToSaveAs;
+	downloadLink.innerHTML = "Download File";
+	if (window.webkitURL != null)
+	{
+		// Chrome allows the link to be clicked
+		// without actually adding it to the DOM.
+		downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+	}
+	else
+	{
+		// Firefox requires the link to be added to the DOM
+		// before it can be clicked.
+		downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+		downloadLink.onclick = destroyClickedElement;
+		downloadLink.style.display = "none";
+		document.body.appendChild(downloadLink);
+	}
+
+	downloadLink.click();
+}
+
+function destroyClickedElement(event)
+{
+	document.body.removeChild(event.target);
+}
+
+
+function loadFileAsText()
+{
+	
+	var fileToLoad = document.getElementById("fileToLoad").files[0];
+	var fileReader = new FileReader();
+	fileReader.onload = function(fileLoadedEvent) 
+	{
+		var textFromFileLoaded = fileLoadedEvent.target.result;
+		var arrayOfLines = textFromFileLoaded.split("-");
+		
+		for(var i = 2 ; i < arrayOfLines.length+1 ; i++)
+		{
+			if(i % 2 == 0){ //雙數
+				
+				imgList[(i /2) -1].X = parseInt(arrayOfLines[i-2]) ;
+			}
+			else{ //單數
+				imgList[((i-1) /2)-1].Y = parseInt(arrayOfLines[i-2]) ;
+			};
+		}
+		reDrawCanvasImage();
+		//   i/2|0
+	};
+	fileReader.readAsText(fileToLoad, "UTF-8");
+}
+
+
+</script>
+</body>
+</html>

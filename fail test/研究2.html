@@ -1,0 +1,51 @@
+<head>
+<style>
+#div1 {
+	width:50px;
+	height:50px;
+	margin: 15px;
+	padding:10px;
+	border:1px solid #aaaaaa;
+	}
+	
+#div2 {
+	width:50px;
+	height:50px;
+	margin: 15px;
+	padding:10px;
+	border:1px solid #aaaaaa;
+	}
+</style>
+</head>
+<body>
+<script>
+function dragStart(event) {
+    event.dataTransfer.setData("Text", event.target.id);
+}
+function allowDrop(event) {
+    event.preventDefault();
+}
+function drop(event) {
+    event.preventDefault();
+    var data = event.dataTransfer.getData("Text");
+    event.target.appendChild(document.getElementById(data));
+}
+
+// 網頁載入完成
+
+</script>
+
+
+
+
+<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+<div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+
+<img id="drag1" src="pic\img.jpg" draggable="true"
+ondragstart="dragStart(event)" width="50" height="50">
+
+<img id="drag2" src="pic\img2.jpg" draggable="true"
+ondragstart="dragStart(event)" width="50" height="50">
+
+</body>

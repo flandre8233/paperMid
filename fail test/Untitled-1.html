@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>無標題文件</title>
+
+<div style="border:none;margin:0px;padding:0px;position:relative">
+   <canvas id="_2DCanvas" width="1024" height="308" style="border:1px dashed #c3c3c3;">
+        流覽器如果不支援canvas元素，就顯示這行文字
+   </canvas>
+</div>
+
+</head>
+
+<body>
+<p id="simpletest"></p>
+<-- <img src="" width="" -->
+
+<script language="javascript">
+var canvas = document.getElementById("_2DCanvas");
+var ctx = canvas.getContext('2d');
+
+var img = new Image();
+img.src = "pic/img.jpg";
+
+var mx ;
+var my ;
+
+var selected = false;
+
+img.onload = function()
+{
+	ctx.drawImage(img,60,30  ,120,120);
+};
+
+//document.getElementById("simpletest").innerHTML = coord.x +"  "+ coord.y;
+canvas.addEventListener("mousemove" , function1 , false);
+
+canvas.addEventListener("mouseup" , function2 , false);
+canvas.addEventListener("mousedown" , function3 , false);
+
+function function1(evt) {
+	if (selected == true){
+		coord = getMousePointerCoord(evt);
+		document.getElementById("simpletest").innerHTML = coord.x +"  "+ coord.y;
+		
+		
+		mx = coord.x;
+		my = coord.y;
+		//cxt.clearRect (0, 0, canvas.width, canvas.height);
+		//ctx.clearRect (0, 0, canvas.width, canvas.height);
+		ctx.drawImage(img,mx,my ,120,120);
+		
+		//document.getElementById("simpletest").innerHTML = "1212";
+	};
+};
+function function2(evt){
+	selected = false ;
+}
+
+function function3(evt){
+	evt.preventDefault();
+	coord = getMousePointerCoord(evt);
+	selected = true ;
+	document.getElementById("simpletest").innerHTML = selected ;
+};
+
+
+// 用來計算座標位置並傳回
+var getMousePointerCoord = function(e)
+{
+   var evt = e||window.event; // 獲取相容性event物件
+   // 確定當前流覽器是否支持layerX
+   var supportLayer = typeof evt.layerX == 'number';
+   // 獲取事件物件元素
+   var target = evt.target ? evt.target : evt.srcElement;
+   // 計算x座標，首先確定使用layerX還是x，然後減去當前元素的邊距、邊框、襯距
+   var x = (supportLayer ? evt.layerX : evt.x) -
+             parseInt(getStyle(target,"borderLeftWidth")) -
+             parseInt(getStyle(target,"marginLeft")) -
+             parseInt(getStyle(target,"paddingLeft"));
+   // 計算y座標，首先確定使用layerY還是y，然後減去當前元素的邊框、襯距
+   // 注意不要減去邊距，父BOX的高度不會包含其中元素的邊距設定
+   var y = (supportLayer ? evt.layerY : evt.y) -
+             parseInt(getStyle(target,"borderTopWidth")) -
+             parseInt(getStyle(target,"paddingTop"));
+   // x、y座標有可能超出BOX，而且還有可能是負值，因此要做一下檢查
+   // 檢查x、y座標是否位於BOX內容區域內，然後根據這個進行修正
+   var isInBox = x>0&&y>0&&
+                    x<parseInt(getStyle(target,"width"))&&
+                    y<parseInt(getStyle(target,"height"));
+   // 只有位於BOX內容區域內才會得到值，否則得到的null
+   x = isInBox?x:null;
+   y = isInBox?y:null;
+   // 傳回一個Object，包含座標屬性
+   return {x: x, y: y};
+};
+
+/**
+ * 該函數用於獲取一個樣式屬性的計算值
+ * @param Element  elem             樣式所在的元素
+ * @param String   style            樣式DOM屬性名，例如paddingLeft
+ * @return String
+ */
+var getStyle = function(elem, style)
+{
+   if (window.getComputedStyle) { 
+      if (style=="cssFloat"||style=="styleFloat"||
+           style=="float") {
+         return window.getComputedStyle(elem, null).cssFloat;
+      }
+      else {
+         return window.getComputedStyle(elem, null)[style];
+      }
+   }
+   else{ // 舊版IE流覽器
+      if (style=="width"&&
+           elem.currentStyle["width"]=="auto"){
+         return elem.offsetWidth;
+      }
+      else if (style=="height"&&
+                 elem.currentStyle["height"]=="auto"){
+         return elem.offsetHeight;
+      }
+      else if (style=="cssFloat"||style=="styleFloat"||
+                 style=="float"){
+         return elem.currentStyle["styleFloat"];
+      }
+      else {
+         return elem.currentStyle[style];
+      }
+   }
+};
+</script>
+</body>
+</html>

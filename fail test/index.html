@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<title>HTML5 Canvas</title>
+
+</head>
+<body>
+
+
+<div style="border:none;margin:0px;padding:0px;position:relative">
+   <canvas id="_2DCanvas" width="1920" height="1080"
+          style="border:1px dashed #c3c3c3;">
+        流覽器如果不支援canvas元素，就顯示這行文字
+   </canvas>
+</div>
+<script>
+var canvas, cxt, SELECTED;
+var MouseOriginX, MouseOriginY, DrawOriginX, DrawOriginY;
+var img1,img2;
+
+window.onload = function() {
+	// 獲得對canvas元素的參考
+   canvas = document.getElementById("_2DCanvas");
+   cxt = canvas.getContext("2d");
+   // 定義canvas的滑鼠mousedown事件監聽
+   canvas.addEventListener('mousedown',canvasMouseDownHandler, false);
+   // 定義Canvas滑鼠移動事件
+   canvas.addEventListener('mousemove',canvasMouseMoveHandler, false);
+   // 定義Canvas滑鼠放開事件
+   canvas.addEventListener('mouseup',canvasMouseUpHandler, false);
+ 
+ 
+		img1 = new Image();
+		img2 = new Image();
+		
+		
+		//img.onload=function(){
+			draw(img2,0,0);
+		//};
+			
+			
+}
+
+function canvasMouseDownHandler(){
+	//alert("test");
+	SELECTED = true ;
+}
+
+function canvasMouseMoveHandler(evt){
+	
+	if(SELECTED == true)
+	{
+	
+		var mousePos = getMousePos(canvas, evt);
+		
+		var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
+        	writeMessage(canvas, message);
+			
+			draw(img2, mousePos.x , mousePos.y);
+		
+		/*
+		evt.preventDefault();
+		var coord = getMousePointerCoord(evt);
+		alert(coord.x);
+		draw(img2,coord.x,coord.y);
+		*/
+	}
+	
+	img2.onmouseover = function(){
+		alert(aa);
+	};
+}
+
+function canvasMouseUpHandler(){
+	SELECTED = false ;
+}
+
+
+
+
+
+
+
+
+function writeMessage(canvas, message) {
+        var context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.font = '18pt Calibri';
+        context.fillStyle = 'black';
+        context.fillText(message, 10, 25);
+      }
+
+function getMousePos(canvas, evt) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+          x: evt.clientX - rect.left,
+          y: evt.clientY - rect.top
+        };
+      }
+
+function draw(img,imgX,imgY) { //一定要確保img載入完成才可drawImage()
+	//alert(cxt);
+	cxt.clearRect(0, 0, canvas.width, cxt.canvas.height);
+	
+	img.onerror=function(){
+	//alert("error");
+	};
+	
+	img.onload = function() {
+		cxt.drawImage(img, imgX,imgY   ,100,100);
+		//alert("loaded");
+	};
+	
+	img1.src = "pic/img.jpg";
+	img2.src = "pic/img2.jpg";
+	
+	
+	/*確保已載入方法
+	
+	img.addEventListener("load", function() { } , false);
+	img.onload=function(){ };
+	*/
+}
+
+
+
+var getMousePointerCoord = function(e)
+{
+   var evt = e||window.event; // 獲取相容性event物件
+   // 確定當前流覽器是否支持layerX
+   var supportLayer = typeof evt.layerX == 'number';
+   // 獲取事件物件元素
+   var target = evt.target ? evt.target : evt.srcElement;
+   // 計算x座標，首先確定使用layerX還是x，然後減去當前元素的邊距、邊框、襯距
+   var x = (supportLayer ? evt.layerX : evt.x) -
+             parseInt(getStyle(target,"borderLeftWidth")) -
+             parseInt(getStyle(target,"marginLeft")) -
+             parseInt(getStyle(target,"paddingLeft"));
+   // 計算y座標，首先確定使用layerY還是y，然後減去當前元素的邊框、襯距
+   // 注意不要減去邊距，父BOX的高度不會包含其中元素的邊距設定
+   var y = (supportLayer ? evt.layerY : evt.y) -
+             parseInt(getStyle(target,"borderTopWidth")) -
+             parseInt(getStyle(target,"paddingTop"));
+   // x、y座標有可能超出BOX，而且還有可能是負值，因此要做一下檢查
+   // 檢查x、y座標是否位於BOX內容區域內，然後根據這個進行修正
+   var isInBox = x>0&&y>0&&
+                    x<parseInt(getStyle(target,"width"))&&
+                    y<parseInt(getStyle(target,"height"));
+   // 只有位於BOX內容區域內才會得到值，否則得到的null
+   x = isInBox?x:null;
+   y = isInBox?y:null;
+   // 傳回一個Object，包含座標屬性
+   return {x: x, y: y};
+};
+
+</script>
+</body>
+</html>
+

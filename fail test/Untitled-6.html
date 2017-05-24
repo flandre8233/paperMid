@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>無標題文件</title>
+
+<div style="border:none;margin:0px;padding:0px;position:relative">
+   <canvas id="_2DCanvas" width="1024" height="768" style="border:1px dashed #c3c3c3;">
+        流覽器如果不支援canvas元素，就顯示這行文字
+   </canvas>
+</div>
+</head>
+
+<body>
+<p id="simpletest"></p>
+<script language="javascript">
+
+var coord,selected=false;
+var mouseX,mouseY;
+var canvas = document.getElementById('_2DCanvas');
+var context = canvas.getContext('2d');
+	
+
+
+ window.onload=function() {	
+	//ｫﾅｧiｹﾏ､・m
+	
+	
+	
+	var img_arr= [];
+	
+	img_arr[0]={img:new Image()  ,   X:0   ,   Y:400    ,   src:"pic/hair.png"};
+	img_arr[1]={img:new Image()  ,   X:150 ,   Y:50     ,   src:"pic/hair.png"};
+	img_arr[2]={img:new Image()  ,   X:300 ,   Y:50     ,   src:"pic/hair.png"};
+	img_arr[3]={img:new Image()  ,   X:450 ,   Y:50     ,   src:"pic/hair.png"};
+	img_arr[4]={img:new Image()  ,   X:600 ,   Y:50     ,   src:"pic/hair.png"};
+	img_arr[5]={img:new Image()  ,   X:750 ,   Y:50     ,   src:"pic/cap.png"};
+	//document.getElementById("simpletest").innerHTML = img_arr[0].X;
+	
+	
+	for(var i=0 ; i< img_arr.length ; i++)
+	 {
+			img_arr[i].img.onload=function(i)
+			{
+					context.drawImage(img_arr[i].img   ,   img_arr[i].X   ,   img_arr[i].Y);	
+			};
+		img_arr[i].img.src=img_arr[i].src;	
+		
+		//document.getElementById("simpletest").innerHTML = img_arr[i].img.src;
+	};
+ };
+</script>
+
+
+</body>
+</html>

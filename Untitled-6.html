@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>無標題文件</title>
+
+<div style="border:none;margin:0px;padding:0px;position:relative">
+   <canvas id="_2DCanvas" width="1024" height="768" style="border:1px dashed #c3c3c3;">
+        流覽器如果不支援canvas元素，就顯示這行文字
+   </canvas>
+
+</head>
+
+<body>
+
+<script language="javascript">
+
+var canvas = document.getElementById("_2DCanvas") ;
+var ctx = canvas.getContext('2d');
+
+var imgArray = new Array();
+
+imgArray[0] = new Image();
+imgArray[0].X = 29 ;
+imgArray[0].Y = 0 ;
+imgArray[0].width = canvas.width ;
+imgArray[0].height= canvas.height ;
+imgArray[0].src = "pic/img.jpg";
+
+imgArray[0].onload = function() {
+	ctx.drawImage(imgArray[0],imgArray[0].X,imgArray[0].Y);
+};
+</script>
+
+
+</body>
+</html>

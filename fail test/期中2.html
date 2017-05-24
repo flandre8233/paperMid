@@ -1,0 +1,194 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+</head>
+
+<body>
+<div style="border:none;margin:0px;padding:0px;position:relative">
+  <canvas id="_2DCanvas" width="1800" height="768" style="border:1px dashed #c3c3c3;">
+  流覽器如果不支援canvas元素，就顯示這行文字
+  </canvas>
+</div>
+
+<p id="simpletest"></p>
+<script>
+
+var coord,selected=false;
+var mouseX,mouseY;
+var canvas = document.getElementById('_2DCanvas');
+var context = canvas.getContext('2d');
+	
+
+
+ window.onload=function() {	
+	//ｫﾅｧiｹﾏ､・m
+	var img_arr= [];
+	img_arr[0]={img:new Image() , X:0,Y:50,src:"pic/hair.png"};
+	img_arr[1]= {img:new Image(),X:150,Y:50,src:"pic/hair.png"};
+	img_arr[2]={img:new Image() , X:300,Y:50,src:"pic/hair.png"};
+	img_arr[3]= {img:new Image(),X:450,Y:50,src:"pic/hair.png"};
+	img_arr[4]={img:new Image() , X:600,Y:50,src:"pic/hair.png"};
+	img_arr[5]= {img:new Image(),X:750,Y:50,src:"pic/cap.png"};
+	
+	for(var i=0 ; i< img_arr.length ; i++)
+	 {
+			img_arr[i].img.onload=function()
+			{
+				for(var i=0 ; i< img_arr.length ; i++)
+				{
+					context.drawImage(img_arr[i].img   ,   img_arr[i].X   ,   img_arr[i].Y ,50,50);	
+				};
+			};
+		img_arr[i].img.src=img_arr[i].src;	
+		
+		//document.getElementById("simpletest").innerHTML = img_arr[i].img.src;
+	};
+	
+	 //ｹﾏ､unction
+	 
+	
+
+	 //MouseDownｺﾊﾅ･ｨﾆ･・
+	 canvas.addEventListener('mousedown',canvasMouseDownHandler, false); 
+
+	 //MouseMoveｺﾊﾅ･ｨﾆ･・
+	canvas.addEventListener('mousemove',canvasMouseMoveHandler, false);
+ 
+  	//MouseUpｺﾊﾅ･ｨﾆ･・
+	canvas.addEventListener('mouseup',canvasMouseUpHandler,false);
+	
+
+	 
+	
+}
+	
+ //ｩwｸqCanvasｷﾆｹｫｫUｨﾆ･・
+ function canvasMouseDownHandler(evt)
+{	
+	evt.preventDefault();
+	var coord = getMousePointerCoord(evt);
+	
+		mouseX=coord.x;
+		mouseY=coord.y;	
+		
+
+		document.getElementById("simpletest").innerHTML = "ｴ弴ﾕ1";
+	
+	//ﾀﾋｬdｷﾆｹｫｬOｧ_ｦbｹﾏ､dｳｺ
+	for(var i=img_arr.img.length-1;i>=1;i--)
+	{
+	if(coord.x >= img_arr[i].X && coord.y >= img_arr[i].Y && 
+	coord.x <= img_arr[i].X+img_arr[i].width && coord.y <= img_arr[i].Y+img_arr[i].height)
+		{
+			selected = i;
+			coord.x= img_arr[selected].X;
+			coord.y= img_arr[selected].Y;
+			document.getElementById("simpletest").innerHTML = "ｴ弴ﾕ2";
+		
+		}
+	}
+	
+}
+
+ 
+  
+ // ｩwｸqCanvasｷﾆｹｫｲｾｰﾊｨﾆ･・
+ function canvasMouseMoveHandler(evt)
+ {
+	evt.preventDefault(); 	
+	if(selected==i)
+	 {
+	
+		var coord = getMousePointerCoord(evt);
+		context.clearRect(0,0,canvas.width,canvas.height);
+		context.drawImage(img_arr[i].img,mouseX,mouseY);
+		mouseX=coord.x;
+		mouseY=coord.y;
+		
+		
+		
+		document.getElementById("simpletest").innerHTML = "ｴ弴ﾕ3";
+ 	}
+	
+	
+ }
+ 
+ // Canvasｷﾆｹｫｩ}ｨﾆ･Bｲzｱ`ｦ｡
+function canvasMouseUpHandler(evt) 
+{
+   evt.preventDefault(); // ｨ峵wｳ]ｪｺｦ谺ｰ
+   selected = false;      // ｬｰﾅﾜｼﾆｽ皴ﾈｬｰfalseｪ愠ﾜｨSｦｳｿ・､ｯxｧﾎ
+}
+
+
+ 
+// ･ﾎｨﾓｭpｺ箘yｼﾐｦ・mｨﾃｶﾇｦ^
+var getMousePointerCoord = function(e)
+{
+   var evt = e||window.event; // ﾀ岦ﾛｮeｩﾊeventｪｫ･・
+   // ｽTｩwｷ戓eｬyﾄｾｹｬOｧ_､茘ayerX
+   var supportLayer = typeof evt.layerX == 'number';
+   // ﾀ甯ﾆ･ｫ･ｸｯﾀ
+   var target = evt.target ? evt.target : evt.srcElement;
+   // ｭpｺ窗ｮyｼﾐ｡Aｭｺ･ｽTｩwｨﾏ･ﾎlayerXﾁﾙｬOx｡AｵMｫ盒鈆hｷ戓e､ｸｯﾀｪｺﾃ荼Z｡Bﾃ莪ﾘ｡BﾅｨｶZ
+   var x = (supportLayer ? evt.layerX : evt.x) -
+             parseInt(getStyle(target,"borderLeftWidth")) -
+             parseInt(getStyle(target,"marginLeft")) -
+             parseInt(getStyle(target,"paddingLeft"));
+   // ｭpｺ窕ｮyｼﾐ｡Aｭｺ･ｽTｩwｨﾏ･ﾎlayerYﾁﾙｬOy｡AｵMｫ盒鈆hｷ戓e､ｸｯﾀｪｺﾃ莪ﾘ｡BﾅｨｶZ
+   // ｪ`ｷN､｣ｭnｴ鈆hﾃ荼Z｡A､OXｪｺｰｪｫﾗ､｣ｷ|･]ｧtｨ荀､､ｸｯﾀｪｺﾃ荼Zｳ]ｩw
+   var y = (supportLayer ? evt.layerY : evt.y) -
+             parseInt(getStyle(target,"borderTopWidth")) -
+             parseInt(getStyle(target,"paddingTop"));
+   // x｡Byｮyｼﾐｦｳ･iｯ犖W･XBOX｡Aｦﾓ･Bﾁﾙｦｳ･iｯ牀Oｭtｭﾈ｡Aｦ]ｦｹｭnｰｵ､@､Uﾀﾋｬd
+   // ﾀﾋｬdx｡ByｮyｼﾐｬOｧ_ｦ・OX､ｺｮeｰﾏｰ・ｺ｡AｵMｫ皸ﾚｾﾚｳoｭﾓｶiｦ豁ﾗ･ｿ
+   var isInBox = x>0&&y>0&&
+                    x<parseInt(getStyle(target,"width"))&&
+                    y<parseInt(getStyle(target,"height"));
+   // ･uｦｳｦ・OX､ｺｮeｰﾏｰ・ｺ､~ｷ|ｱoｨ・ﾈ｡Aｧ_ｫhｱoｨ・ｺnull
+   x = isInBox?x:null;
+   y = isInBox?y:null;
+   // ｶﾇｦ^､@ｭﾓObject｡A･]ｧtｮyｼﾐﾄﾝｩﾊ
+   return {x: x, y: y};
+};
+
+/**
+ * ｸﾓｨ郛ﾆ･ﾎｩ妤@ｭﾓｼﾋｦ｡ﾄﾝｩﾊｪｺｭpｺ箝ﾈ
+ * @param Element  elem             ｼﾋｦ｡ｩﾒｦbｪｺ､ｸｯﾀ
+ * @param String   style            ｼﾋｦ｡DOMﾄﾝｩﾊｦW｡AｨﾒｦppaddingLeft
+ * @return String
+ */
+var getStyle = function(elem, style)
+{
+   if (window.getComputedStyle) { 
+      if (style=="cssFloat"||style=="styleFloat"||
+           style=="float") {
+         return window.getComputedStyle(elem, null).cssFloat;
+      }
+      else {
+         return window.getComputedStyle(elem, null)[style];
+      }
+   }
+   else{ // ﾂﾂｪｩIEｬyﾄｾｹ
+      if (style=="width"&&
+           elem.currentStyle["width"]=="auto"){
+         return elem.offsetWidth;
+      }
+      else if (style=="height"&&
+                 elem.currentStyle["height"]=="auto"){
+         return elem.offsetHeight;
+      }
+      else if (style=="cssFloat"||style=="styleFloat"||
+                 style=="float"){
+         return elem.currentStyle["styleFloat"];
+      }
+      else {
+         return elem.currentStyle[style];
+      }
+   }
+};
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>11</title>
+</head>
+
+<body>
+<div style="border:none;margin:0px;padding:0px;position:relative">
+   <canvas id="_2DCanvas" width="900" height="750"
+          style="border:1px dashed #c3c3c3;">
+        not support canvas.
+   </canvas>
+</div>
+<p id="simpletest"></p>
+<script>
+//放var變數區......
+var canvas = document.getElementById('_2DCanvas');
+var context = canvas.getContext('2d');
+var coord;
+var imgX,imgY,mouseX,mouseY = 0;
+
+var img = new Image();
+img.src ="pic/img.jpg";
+
+
+//放監聽區......
+canvas.addEventListener('mousemove',canvasMouseMoveHandler, false);
+
+
+
+//起始繪製載入畫面區.......
+window.onload=function() {
+	document.getElementById("simpletest").innerHTML = "111";
+	img.onload = function() {
+	context.drawImage(img,0,0);
+	document.getElementById("simpletest").innerHTML = "222";
+	};
+};
+
+
+//當滑鼠移動就做什麼東東區.......
+function canvasMouseMoveHandler(evt){
+ 	//evt.preventDefault(); 
+	document.getElementById("simpletest").innerHTML = "333";
+	var coord = getMousePointerCoord(evt);
+
+	imgX = coord.x;
+	imgY = coord.y;
+	
+	context.drawImage(img,imgX,imgY);
+};
+
+
+
+
+  
+// ･ﾎｨﾓｭpｺ箘yｼﾐｦ・mｨﾃｶﾇｦ^
+var getMousePointerCoord = function(e)
+{
+   var evt = e||window.event; // ﾀ岦ﾛｮeｩﾊeventｪｫ･・
+   // ｽTｩwｷ戓eｬyﾄｾｹｬOｧ_､茘ayerX
+   var supportLayer = typeof evt.layerX == 'number';
+   // ﾀ甯ﾆ･ｫ･ｸｯﾀ
+   var target = evt.target ? evt.target : evt.srcElement;
+   // ｭpｺ窗ｮyｼﾐ｡Aｭｺ･ｽTｩwｨﾏ･ﾎlayerXﾁﾙｬOx｡AｵMｫ盒鈆hｷ戓e､ｸｯﾀｪｺﾃ荼Z｡Bﾃ莪ﾘ｡BﾅｨｶZ
+   var x = (supportLayer ? evt.layerX : evt.x) -
+             parseInt(getStyle(target,"borderLeftWidth")) -
+             parseInt(getStyle(target,"marginLeft")) -
+             parseInt(getStyle(target,"paddingLeft"));
+   // ｭpｺ窕ｮyｼﾐ｡Aｭｺ･ｽTｩwｨﾏ･ﾎlayerYﾁﾙｬOy｡AｵMｫ盒鈆hｷ戓e､ｸｯﾀｪｺﾃ莪ﾘ｡BﾅｨｶZ
+   // ｪ`ｷN､｣ｭnｴ鈆hﾃ荼Z｡A､OXｪｺｰｪｫﾗ､｣ｷ|･]ｧtｨ荀､､ｸｯﾀｪｺﾃ荼Zｳ]ｩw
+   var y = (supportLayer ? evt.layerY : evt.y) -
+             parseInt(getStyle(target,"borderTopWidth")) -
+             parseInt(getStyle(target,"paddingTop"));
+   // x｡Byｮyｼﾐｦｳ･iｯ犖W･XBOX｡Aｦﾓ･Bﾁﾙｦｳ･iｯ牀Oｭtｭﾈ｡Aｦ]ｦｹｭnｰｵ､@､Uﾀﾋｬd
+   // ﾀﾋｬdx｡ByｮyｼﾐｬOｧ_ｦ・OX､ｺｮeｰﾏｰ・ｺ｡AｵMｫ皸ﾚｾﾚｳoｭﾓｶiｦ豁ﾗ･ｿ
+   var isInBox = x>0&&y>0&&
+                    x<parseInt(getStyle(target,"width"))&&
+                    y<parseInt(getStyle(target,"height"));
+   // ･uｦｳｦ・OX､ｺｮeｰﾏｰ・ｺ､~ｷ|ｱoｨ・ﾈ｡Aｧ_ｫhｱoｨ・ｺnull
+   x = isInBox?x:null;
+   y = isInBox?y:null;
+   // ｶﾇｦ^､@ｭﾓObject｡A･]ｧtｮyｼﾐﾄﾝｩﾊ
+   return {x: x, y: y};
+};
+
+/**
+ * ｸﾓｨ郛ﾆ･ﾎｩ妤@ｭﾓｼﾋｦ｡ﾄﾝｩﾊｪｺｭpｺ箝ﾈ
+ * @param Element  elem             ｼﾋｦ｡ｩﾒｦbｪｺ､ｸｯﾀ
+ * @param String   style            ｼﾋｦ｡DOMﾄﾝｩﾊｦW｡AｨﾒｦppaddingLeft
+ * @return String
+ */
+var getStyle = function(elem, style)
+{
+   if (window.getComputedStyle) { 
+      if (style=="cssFloat"||style=="styleFloat"||
+           style=="float") {
+         return window.getComputedStyle(elem, null).cssFloat;
+      }
+      else {
+         return window.getComputedStyle(elem, null)[style];
+      }
+   }
+   else{ // ﾂﾂｪｩIEｬyﾄｾｹ
+      if (style=="width"&&
+           elem.currentStyle["width"]=="auto"){
+         return elem.offsetWidth;
+      }
+      else if (style=="height"&&
+                 elem.currentStyle["height"]=="auto"){
+         return elem.offsetHeight;
+      }
+      else if (style=="cssFloat"||style=="styleFloat"||
+                 style=="float"){
+         return elem.currentStyle["styleFloat"];
+      }
+      else {
+         return elem.currentStyle[style];
+      }
+   }
+};
+
+</script>
+
+</body>
+</html>
